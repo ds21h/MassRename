@@ -1,10 +1,11 @@
 Imports System.IO
+Imports System.Windows.Forms
 
 Public Class FrmMain
   Private Const cOK As Integer = 0
   Private Const cFout As Integer = 10
 
-  Private mAkties(-1) As Aktie
+  Private mAkties(-1) As Action
   Private mMaxAktie As Integer = -1
 
   Private mPad As String = ""
@@ -13,101 +14,101 @@ Public Class FrmMain
 
   Public Sub New()
     InitializeComponent()
-    sVulDrives()
+    sMakeDrives()
   End Sub
 
-  Private Sub sVulDrives()
+  Private Sub sMakeDrives()
     Dim lStations() As DriveInfo
-    Dim lDriveNaam As String
-    Dim lDriveTeller As Integer
+    Dim lDriveName As String
+    Dim lDriveCount As Integer
     Dim lDriveNode As TreeNode
 
     TreeDir.BeginUpdate()
     TreeDir.Nodes.Clear()
-    lDriveTeller = 0
+    lDriveCount = 0
     lStations = DriveInfo.GetDrives
     For Each lStation In lStations
-      lDriveNaam = lStation.Name
-      If Mid(lDriveNaam, Len(lDriveNaam), 1) = "\" Then
-        lDriveNaam = Mid(lDriveNaam, 1, Len(lDriveNaam) - 1)
+      lDriveName = lStation.Name
+      If Mid(lDriveName, Len(lDriveName), 1) = "\" Then
+        lDriveName = Mid(lDriveName, 1, Len(lDriveName) - 1)
       End If
       If lStation.IsReady Then
-        lDriveNaam = "(" & lStation.VolumeLabel & ") " & lDriveNaam
+        lDriveName = "(" & lStation.VolumeLabel & ") " & lDriveName
       End If
 
       lDriveNode = New TreeNode
-      lDriveNode.Text = lDriveNaam
+      lDriveNode.Text = lDriveName
       TreeDir.Nodes.Add(lDriveNode)
       If lStation.IsReady Then
-        TreeDir.Nodes(lDriveTeller).Nodes.Add("x")
+        TreeDir.Nodes(lDriveCount).Nodes.Add("x")
       End If
-      lDriveTeller = lDriveTeller + 1
+      lDriveCount = lDriveCount + 1
     Next lStation
     TreeDir.EndUpdate()
   End Sub
 
-  Private Sub sVulSubDir(ByVal pPad As String, ByVal pKnoopNode As TreeNode)
+  Private Sub sFillNode(ByVal pPath As String, ByVal pStartNode As TreeNode)
     Dim lSubDirs() As String
-    Dim lDirTeller As Integer
+    Dim lDirCount As Integer
 
-    lSubDirs = sHaalSubDirs(pPad)
-    lDirTeller = 0
+    lSubDirs = sGetSubDirs(pPath)
+    lDirCount = 0
     TreeDir.BeginUpdate()
-    pKnoopNode.Nodes.Clear()
+    pStartNode.Nodes.Clear()
     For Each lSubDir In lSubDirs
-      pKnoopNode.Nodes.Add(lSubDir)
-      pKnoopNode.Nodes(lDirTeller).Nodes.Add("x")
-      lDirTeller = lDirTeller + 1
+      pStartNode.Nodes.Add(lSubDir)
+      pStartNode.Nodes(lDirCount).Nodes.Add("x")
+      lDirCount = lDirCount + 1
     Next
     TreeDir.EndUpdate()
   End Sub
 
   Private Sub hTreeDir_BeforeExpand(ByVal sender As Object, ByVal e As System.Windows.Forms.TreeViewCancelEventArgs) Handles TreeDir.BeforeExpand
     Dim lSelNode As TreeNode
-    Dim lPad As String
+    Dim lPath As String
 
     lSelNode = e.Node
-    lPad = sMaakPad(lSelNode)
-    sVulSubDir(lPad, lSelNode)
+    lPath = sDeterminePath(lSelNode)
+    sFillNode(lPath, lSelNode)
   End Sub
 
-  Private Function sMaakPad(ByVal pInNode As TreeNode) As String
-    Dim lPad As String
-    Dim lPosTeller As Integer
+  Private Function sDeterminePath(ByVal pInNode As TreeNode) As String
+    Dim lPath As String
+    Dim lPosCount As Integer
     Dim lStartPos As Integer
-    Dim lRestLengte As Integer
+    Dim lRemLength As Integer
 
-    lPad = pInNode.FullPath
-    If Mid(lPad, 1, 1) = "(" Then
-      For lPosTeller = 2 To Len(lPad)
-        If Mid(lPad, lPosTeller, 1) = ")" Then
-          lStartPos = lPosTeller + 2
-          lRestLengte = (Len(lPad) - lStartPos) + 1
-          lPad = Mid(lPad, lStartPos, lRestLengte)
+    lPath = pInNode.FullPath
+    If Mid(lPath, 1, 1) = "(" Then
+      For lPosCount = 2 To Len(lPath)
+        If Mid(lPath, lPosCount, 1) = ")" Then
+          lStartPos = lPosCount + 2
+          lRemLength = (Len(lPath) - lStartPos) + 1
+          lPath = Mid(lPath, lStartPos, lRemLength)
           Exit For
         End If
-      Next lPosTeller
+      Next lPosCount
     End If
-    lPad = lPad & "\"
-    Return lPad
+    lPath = lPath & "\"
+    Return lPath
   End Function
 
-  Private Function sHaalSubDirs(ByVal pPad As String) As String()
+  Private Function sGetSubDirs(ByVal pPath As String) As String()
     Dim lSubDirs() As String
-    Dim lHoofdBieb As DirectoryInfo
-    Dim lBiebs() As DirectoryInfo
-    Dim lAantDir As Integer
-    Dim lDirTeller As Integer
+    Dim lMainDir As DirectoryInfo
+    Dim lDirs() As DirectoryInfo
+    Dim lDirNumber As Integer
+    Dim lDirCount As Integer
 
-    lDirTeller = 0
-    lHoofdBieb = New DirectoryInfo(pPad)
+    lDirCount = 0
+    lMainDir = New DirectoryInfo(pPath)
     Try
-      lBiebs = lHoofdBieb.GetDirectories
-      lAantDir = lBiebs.GetLength(0)
-      ReDim lSubDirs(lAantDir - 1)
-      For Each lBieb In lBiebs
-        lSubDirs(lDirTeller) = lBieb.Name
-        lDirTeller = lDirTeller + 1
+      lDirs = lMainDir.GetDirectories
+      lDirNumber = lDirs.GetLength(0)
+      ReDim lSubDirs(lDirNumber - 1)
+      For Each lDir In lDirs
+        lSubDirs(lDirCount) = lDir.Name
+        lDirCount = lDirCount + 1
       Next
     Catch ex As Exception
       ReDim lSubDirs(-1)
@@ -119,38 +120,37 @@ Public Class FrmMain
     Dim lSelNode As TreeNode
 
     lSelNode = e.Node
-    mPad = sMaakPad(lSelNode)
-    sVulInhoud()
+    mPad = sDeterminePath(lSelNode)
+    sListFiles()
   End Sub
 
-  Private Sub sVulInhoud()
-    Dim lHoofdBieb As DirectoryInfo
-    Dim lBestanden() As FileInfo
-    Dim lRegel As ListViewItem
+  Private Sub sListFiles()
+    Dim lMainDir As DirectoryInfo
+    Dim lFiles() As FileInfo
+    Dim lLine As ListViewItem
 
-    lHoofdBieb = New DirectoryInfo(mPad)
-    DirInhoud.BeginUpdate()
-    DirInhoud.Items.Clear()
+    lMainDir = New DirectoryInfo(mPad)
+    LstDir.BeginUpdate()
+    LstDir.Items.Clear()
     Try
-      lBestanden = lHoofdBieb.GetFiles
-      For Each lBestand In lBestanden
-        lRegel = New ListViewItem
-        lRegel.Text = lBestand.Name
-        'lRegel.Text = Convert.ToString(lBestand.Name)
-        DirInhoud.Items.Add(lRegel)
+      lFiles = lMainDir.GetFiles
+      For Each lFile In lFiles
+        lLine = New ListViewItem
+        lLine.Text = lFile.Name
+        LstDir.Items.Add(lLine)
       Next
     Catch ex As Exception
     End Try
-    DirInhoud.EndUpdate()
+    LstDir.EndUpdate()
     mInput = ""
     TxtSelected.Text = ""
   End Sub
 
-  Private Sub hDirInhoud_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles DirInhoud.SelectedIndexChanged
+  Private Sub hLstDir_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles LstDir.SelectedIndexChanged
     Dim lRegel As ListViewItem
 
-    If DirInhoud.SelectedItems.Count > 0 Then
-      lRegel = DirInhoud.SelectedItems(0)
+    If LstDir.SelectedItems.Count > 0 Then
+      lRegel = LstDir.SelectedItems(0)
       mInput = lRegel.Text
     Else
       mInput = ""
@@ -160,19 +160,19 @@ Public Class FrmMain
   End Sub
 
   Private Sub hBttnInvoegen_Click(sender As System.Object, e As System.EventArgs) Handles BttnInvoegen.Click
-    sInvoegen(Aktie.Invoegen)
+    sInvoegen(Action.Invoegen)
   End Sub
 
   Private Sub BttnInvoegen1_Click(sender As Object, e As EventArgs) Handles BttnInvoegen1.Click
-    sInvoegen(Aktie.Invoegen1)
+    sInvoegen(Action.Invoegen1)
   End Sub
 
   Private Sub sInvoegen(pAktieCode As Integer)
     Dim lPositie As Integer
-    Dim lAktie As Aktie
+    Dim lAktie As Action
 
     lPositie = CInt(TxtStart.Text)
-    lAktie = New Aktie(pAktieCode, lPositie, TxtInvoegen.Text.Length, TxtInvoegen.Text)
+    lAktie = New Action(pAktieCode, lPositie, TxtInvoegen.Text.Length, TxtInvoegen.Text)
     sNieuweAktie(lAktie)
     TxtSelected.Text = sHernoem(mInput)
   End Sub
@@ -180,11 +180,11 @@ Public Class FrmMain
   Private Sub hBttnVerwijder_Click(sender As System.Object, e As System.EventArgs) Handles BttnVerwijder.Click
     Dim lPositie As Integer
     Dim lLengte As Integer
-    Dim lAktie As Aktie
+    Dim lAktie As Action
 
     lPositie = CInt(TxtStart.Text)
     lLengte = CInt(TxtLengte.Text)
-    lAktie = New Aktie(Aktie.Verwijderen, lPositie, lLengte, "")
+    lAktie = New Action(Action.Verwijderen, lPositie, lLengte, "")
     sNieuweAktie(lAktie)
     TxtSelected.Text = sHernoem(mInput)
   End Sub
@@ -192,11 +192,11 @@ Public Class FrmMain
   Private Sub BttnVerhoog_Click(sender As Object, e As EventArgs) Handles BttnVerhoog.Click
     Dim lPositie As Integer
     Dim lLengte As Integer
-    Dim lAktie As Aktie
+    Dim lAktie As Action
 
     lPositie = CInt(TxtStart.Text)
     lLengte = CInt(TxtLengte.Text)
-    lAktie = New Aktie(Aktie.Verhoog, lPositie, lLengte, "")
+    lAktie = New Action(Action.Verhoog, lPositie, lLengte, "")
     sNieuweAktie(lAktie)
     TxtSelected.Text = sHernoem(mInput)
   End Sub
@@ -204,16 +204,16 @@ Public Class FrmMain
   Private Sub BttnVerlaag_Click(sender As Object, e As EventArgs) Handles BttnVerlaag.Click
     Dim lPositie As Integer
     Dim lLengte As Integer
-    Dim lAktie As Aktie
+    Dim lAktie As Action
 
     lPositie = CInt(TxtStart.Text)
     lLengte = CInt(TxtLengte.Text)
-    lAktie = New Aktie(Aktie.Verlaag, lPositie, lLengte, "")
+    lAktie = New Action(Action.Verlaag, lPositie, lLengte, "")
     sNieuweAktie(lAktie)
     TxtSelected.Text = sHernoem(mInput)
   End Sub
 
-  Private Function sNieuweAktie(pAktie As Aktie) As Integer
+  Private Function sNieuweAktie(pAktie As Action) As Integer
     mMaxAktie = mMaxAktie + 1
     ReDim Preserve mAkties(mMaxAktie)
     mAkties(mMaxAktie) = pAktie
@@ -280,19 +280,19 @@ Public Class FrmMain
     Dim lItem As ListViewItem
 
     If RdoAlles.Checked Then
-      lLengte = DirInhoud.Items.Count - 1
+      lLengte = LstDir.Items.Count - 1
       ReDim lBestanden(lLengte)
       lTeller = 0
-      For Each lItem In DirInhoud.Items
-        lBestanden(lTeller) = lItem.text
+      For Each lItem In LstDir.Items
+        lBestanden(lTeller) = lItem.Text
         lTeller = lTeller + 1
       Next
     Else
-      lLengte = DirInhoud.SelectedItems.Count - 1
+      lLengte = LstDir.SelectedItems.Count - 1
       ReDim lBestanden(lLengte)
       lTeller = 0
-      For Each lItem In DirInhoud.SelectedItems
-        lBestanden(lTeller) = lItem.text
+      For Each lItem In LstDir.SelectedItems
+        lBestanden(lTeller) = lItem.Text
         lTeller = lTeller + 1
       Next
     End If
@@ -301,7 +301,7 @@ Public Class FrmMain
       sHerNoemBestand(lBestand)
     Next
 
-    sVulInhoud()
+    sListFiles()
   End Sub
 
   Private Sub sHerNoemBestand(pNaam As String)

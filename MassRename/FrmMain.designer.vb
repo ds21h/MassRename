@@ -20,7 +20,7 @@ Partial Class FrmMain
   <System.Diagnostics.DebuggerStepThrough()>
   Private Sub InitializeComponent()
     Me.TreeDir = New System.Windows.Forms.TreeView()
-    Me.DirInhoud = New System.Windows.Forms.ListView()
+    Me.LstDir = New System.Windows.Forms.ListView()
     Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
     Me.TxtSelected = New System.Windows.Forms.TextBox()
     Me.BttnInvoegen = New System.Windows.Forms.Button()
@@ -60,19 +60,19 @@ Partial Class FrmMain
     Me.TreeDir.Size = New System.Drawing.Size(192, 201)
     Me.TreeDir.TabIndex = 0
     '
-    'DirInhoud
+    'LstDir
     '
-    Me.DirInhoud.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
-    Me.DirInhoud.Dock = System.Windows.Forms.DockStyle.Fill
-    Me.DirInhoud.FullRowSelect = True
-    Me.DirInhoud.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
-    Me.DirInhoud.HideSelection = False
-    Me.DirInhoud.Location = New System.Drawing.Point(0, 0)
-    Me.DirInhoud.Name = "DirInhoud"
-    Me.DirInhoud.Size = New System.Drawing.Size(192, 322)
-    Me.DirInhoud.TabIndex = 0
-    Me.DirInhoud.UseCompatibleStateImageBehavior = False
-    Me.DirInhoud.View = System.Windows.Forms.View.Details
+    Me.LstDir.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
+    Me.LstDir.Dock = System.Windows.Forms.DockStyle.Fill
+    Me.LstDir.FullRowSelect = True
+    Me.LstDir.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+    Me.LstDir.HideSelection = False
+    Me.LstDir.Location = New System.Drawing.Point(0, 0)
+    Me.LstDir.Name = "LstDir"
+    Me.LstDir.Size = New System.Drawing.Size(192, 322)
+    Me.LstDir.TabIndex = 0
+    Me.LstDir.UseCompatibleStateImageBehavior = False
+    Me.LstDir.View = System.Windows.Forms.View.Details
     '
     'ColumnHeader1
     '
@@ -247,7 +247,7 @@ Partial Class FrmMain
     '
     'SplInhoud.Panel2
     '
-    Me.SplInhoud.Panel2.Controls.Add(Me.DirInhoud)
+    Me.SplInhoud.Panel2.Controls.Add(Me.LstDir)
     Me.SplInhoud.Size = New System.Drawing.Size(192, 527)
     Me.SplInhoud.SplitterDistance = 201
     Me.SplInhoud.TabIndex = 13
@@ -279,7 +279,7 @@ Partial Class FrmMain
     Me.BttnVerlaag.Text = "Verlaag(-1)"
     Me.BttnVerlaag.UseVisualStyleBackColor = True
     '
-    'FrmHoofdscherm
+    'FrmMain
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -301,9 +301,9 @@ Partial Class FrmMain
     Me.Controls.Add(Me.TxtSelected)
     Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
     Me.MaximizeBox = False
-    Me.Name = "FrmHoofdscherm"
+    Me.Name = "FrmMain"
     Me.ShowIcon = False
-    Me.Text = "Hernoem"
+    Me.Text = "Rename"
     CType(Me.DgvAkties, System.ComponentModel.ISupportInitialize).EndInit()
     Me.GrpToepassen.ResumeLayout(False)
     Me.GrpToepassen.PerformLayout()
@@ -316,7 +316,7 @@ Partial Class FrmMain
 
   End Sub
   Friend WithEvents TreeDir As System.Windows.Forms.TreeView
-  Friend WithEvents DirInhoud As System.Windows.Forms.ListView
+  Friend WithEvents LstDir As System.Windows.Forms.ListView
   Friend WithEvents TxtSelected As System.Windows.Forms.TextBox
   Friend WithEvents BttnInvoegen As System.Windows.Forms.Button
   Friend WithEvents TxtInvoegen As System.Windows.Forms.TextBox
