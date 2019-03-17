@@ -117,16 +117,526 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ClmAktie.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="&gt;&gt;SplInhoud.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="LbLengte.Location" type="System.Drawing.Point, System.Drawing">
+    <value>211, 72</value>
+  </data>
+  <data name="&gt;&gt;DgvActions.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;TreeDir.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;BttnInsert.Name" xml:space="preserve">
+    <value>BttnInsert</value>
+  </data>
+  <data name="&gt;&gt;LbStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DgvActions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 122</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;BtnInit.Name" xml:space="preserve">
+    <value>BtnInit</value>
+  </data>
+  <data name="&gt;&gt;TxtStart.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GrpToepassen.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="BttnInsert.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;DgvActions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GrpToepassen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LbLengte.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;RdoSel.Name" xml:space="preserve">
+    <value>RdoSel</value>
+  </data>
+  <data name="LbStart.Location" type="System.Drawing.Point, System.Drawing">
+    <value>211, 43</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="LbStart.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
-  <metadata name="ClmStart.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="LbLengte.Text" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="TxtStart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="&gt;&gt;ClmLengte.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="BttnDelete.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DgvActions.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;LbLengte.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BtnInit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TreeDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 201</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="BttnInsert.Text" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="RdoAll.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="LbStart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 13</value>
+  </data>
+  <data name="&gt;&gt;RdoAll.Parent" xml:space="preserve">
+    <value>GrpToepassen</value>
+  </data>
+  <data name="ClmAktie.HeaderText" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="TxtStart.Location" type="System.Drawing.Point, System.Drawing">
+    <value>257, 40</value>
+  </data>
+  <data name="&gt;&gt;TxtInsert.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;LstDir.Name" xml:space="preserve">
+    <value>LstDir</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel1.Name" xml:space="preserve">
+    <value>SplInhoud.Panel1</value>
+  </data>
+  <data name="ClmStart.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="SplInhoud.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="LstDir.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 322</value>
+  </data>
+  <data name="&gt;&gt;LbLengte.Name" xml:space="preserve">
+    <value>LbLengte</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BttnApply.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="BttnDelete.Location" type="System.Drawing.Point, System.Drawing">
+    <value>520, 69</value>
+  </data>
+  <data name="&gt;&gt;RdoSel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="TxtSelected.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TxtInsert.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel2.Name" xml:space="preserve">
+    <value>SplInhoud.Panel2</value>
+  </data>
+  <data name="RdoSel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="BttnApply.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="LbLengte.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="TxtLength.Location" type="System.Drawing.Point, System.Drawing">
+    <value>257, 69</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel2.Parent" xml:space="preserve">
+    <value>SplInhoud</value>
+  </data>
+  <data name="&gt;&gt;BttnInsert.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BttnDelete.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;TxtInsert.Name" xml:space="preserve">
+    <value>TxtInsert</value>
+  </data>
+  <data name="GrpToepassen.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;BttnApply.Name" xml:space="preserve">
+    <value>BttnApply</value>
+  </data>
+  <data name="&gt;&gt;LstDir.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="RdoSel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>87, 42</value>
+  </data>
+  <data name="RdoSel.Text" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="&gt;&gt;BtnInit.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BttnApply.Parent" xml:space="preserve">
+    <value>GrpToepassen</value>
+  </data>
+  <data name="&gt;&gt;ClmWaarde.Name" xml:space="preserve">
+    <value>ClmWaarde</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FrmMain</value>
+  </data>
+  <data name="BttnApply.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="RdoAll.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;LstDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Name" xml:space="preserve">
+    <value>SplInhoud</value>
+  </data>
+  <data name="&gt;&gt;ClmStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="BttnApply.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 40</value>
+  </data>
+  <data name="&gt;&gt;LbLengte.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TxtLength.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GrpToepassen.Name" xml:space="preserve">
+    <value>GrpToepassen</value>
+  </data>
+  <data name="&gt;&gt;RdoAll.Name" xml:space="preserve">
+    <value>RdoAll</value>
+  </data>
+  <data name="BtnInit.Text" xml:space="preserve">
+    <value>Delete all actions</value>
+  </data>
+  <data name="&gt;&gt;ClmAktie.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TxtLength.Name" xml:space="preserve">
+    <value>TxtLength</value>
+  </data>
+  <data name="TxtInsert.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="RdoSel.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;TxtStart.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;TreeDir.Parent" xml:space="preserve">
+    <value>SplInhoud.Panel1</value>
+  </data>
+  <data name="SplInhoud.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;TxtInsert.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ClmLengte.Name" xml:space="preserve">
+    <value>ClmLengte</value>
+  </data>
+  <data name="BtnInit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 383</value>
+  </data>
+  <data name="RdoSel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ClmStart.HeaderText" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="TxtLength.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="&gt;&gt;BtnInit.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="SplInhoud.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="RdoAll.Text" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="ClmAktie.Width" type="System.Int32, mscorlib">
+    <value>80</value>
+  </data>
+  <data name="&gt;&gt;RdoSel.Parent" xml:space="preserve">
+    <value>GrpToepassen</value>
+  </data>
+  <data name="ClmWaarde.HeaderText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="&gt;&gt;ColumnHeader1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;BttnApply.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ClmLengte.HeaderText" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="RdoAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 17</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="BttnApply.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="LstDir.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;ColumnHeader1.Name" xml:space="preserve">
+    <value>ColumnHeader1</value>
+  </data>
+  <data name="&gt;&gt;RdoAll.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RdoAll.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TxtStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SplInhoud.SplitterDistance" type="System.Int32, mscorlib">
+    <value>201</value>
+  </data>
+  <data name="TreeDir.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="BttnInsert.Location" type="System.Drawing.Point, System.Drawing">
+    <value>520, 38</value>
+  </data>
+  <data name="GrpToepassen.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 446</value>
+  </data>
+  <data name="&gt;&gt;TreeDir.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TreeView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BttnDelete.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;TxtLength.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="LbLengte.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 13</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BttnDelete.Name" xml:space="preserve">
+    <value>BttnDelete</value>
+  </data>
+  <data name="DgvActions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>381, 255</value>
+  </data>
+  <data name="&gt;&gt;TxtStart.Name" xml:space="preserve">
+    <value>TxtStart</value>
+  </data>
+  <data name="&gt;&gt;ClmAktie.Name" xml:space="preserve">
+    <value>ClmAktie</value>
+  </data>
+  <data name="&gt;&gt;TxtSelected.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="TxtSelected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>381, 20</value>
+  </data>
+  <data name="&gt;&gt;BttnInsert.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="GrpToepassen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 73</value>
+  </data>
+  <data name="&gt;&gt;TxtLength.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="LbLengte.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ColumnHeader1.Width" type="System.Int32, mscorlib">
+    <value>256</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="TreeDir.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;BttnInsert.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="LbStart.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;ClmStart.Name" xml:space="preserve">
+    <value>ClmStart</value>
+  </data>
+  <data name="&gt;&gt;LbStart.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="TxtInsert.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="TreeDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="BttnInsert.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="LstDir.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;ClmWaarde.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LbStart.Name" xml:space="preserve">
+    <value>LbStart</value>
+  </data>
+  <data name="&gt;&gt;TxtSelected.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="TxtInsert.Location" type="System.Drawing.Point, System.Drawing">
+    <value>414, 40</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>610, 527</value>
+  </data>
+  <data name="&gt;&gt;TxtSelected.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LbStart.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;DgvActions.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="SplInhoud.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="ClmWaarde.Width" type="System.Int32, mscorlib">
+    <value>158</value>
+  </data>
+  <data name="RdoAll.Location" type="System.Drawing.Point, System.Drawing">
+    <value>87, 19</value>
+  </data>
+  <data name="LbStart.Text" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="&gt;&gt;LstDir.Parent" xml:space="preserve">
+    <value>SplInhoud.Panel2</value>
+  </data>
+  <data name="BtnInit.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;RdoSel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SplInhoud.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 527</value>
+  </data>
+  <data name="&gt;&gt;GrpToepassen.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BttnDelete.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SplInhoud.Panel1.Parent" xml:space="preserve">
+    <value>SplInhoud</value>
+  </data>
+  <data name="ClmLengte.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="&gt;&gt;DgvActions.Name" xml:space="preserve">
+    <value>DgvActions</value>
+  </data>
+  <data name="BtnInit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>381, 23</value>
+  </data>
+  <data name="BttnDelete.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="TxtSelected.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 12</value>
+  </data>
+  <data name="BttnDelete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;TreeDir.Name" xml:space="preserve">
+    <value>TreeDir</value>
+  </data>
+  <data name="TxtLength.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="LstDir.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;TxtSelected.Name" xml:space="preserve">
+    <value>TxtSelected</value>
+  </data>
+  <data name="TxtStart.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <metadata name="ClmWaarde.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="ClmLengte.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="ClmWaarde.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="ClmAktie.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="ClmStart.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
 </root>

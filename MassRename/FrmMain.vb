@@ -1,19 +1,23 @@
 Imports System.IO
 Imports System.Windows.Forms
+Imports System.Resources
 
 Public Class FrmMain
+  Private mResManager As ResourceManager
+
   Private Const cOK As Integer = 0
-  Private Const cFout As Integer = 10
+  Private Const cError As Integer = 10
 
-  Private mAkties(-1) As Action
-  Private mMaxAktie As Integer = -1
+  Private mActions(-1) As Action
+  Private mMaxAction As Integer = -1
 
-  Private mPad As String = ""
+  Private mPath As String = ""
 
   Private mInput As String = ""
 
   Public Sub New()
     InitializeComponent()
+    mResManager = New ResourceManager("MassRename.MassRenameStrings", GetType(FrmMain).Assembly)
     sMakeDrives()
   End Sub
 
@@ -120,7 +124,7 @@ Public Class FrmMain
     Dim lSelNode As TreeNode
 
     lSelNode = e.Node
-    mPad = sDeterminePath(lSelNode)
+    mPath = sDeterminePath(lSelNode)
     sListFiles()
   End Sub
 
@@ -129,7 +133,7 @@ Public Class FrmMain
     Dim lFiles() As FileInfo
     Dim lLine As ListViewItem
 
-    lMainDir = New DirectoryInfo(mPad)
+    lMainDir = New DirectoryInfo(mPath)
     LstDir.BeginUpdate()
     LstDir.Items.Clear()
     Try
@@ -155,179 +159,148 @@ Public Class FrmMain
     Else
       mInput = ""
     End If
-    TxtSelected.Text = sHernoem(mInput)
-    sZetSelectie()
+    TxtSelected.Text = sRename(mInput)
+    sSetSelection()
   End Sub
 
-  Private Sub hBttnInvoegen_Click(sender As System.Object, e As System.EventArgs) Handles BttnInvoegen.Click
-    sInvoegen(Action.Invoegen)
+  Private Sub hBttnInsert_Click(sender As System.Object, e As System.EventArgs) Handles BttnInsert.Click
+    Dim lPosition As Integer
+    Dim lAction As Action
+
+    lPosition = CInt(TxtStart.Text)
+    lAction = New Action(Action.Insert, lPosition, TxtInsert.Text.Length, TxtInsert.Text)
+    sNewAction(lAction)
+    TxtSelected.Text = sRename(mInput)
   End Sub
 
-  Private Sub BttnInvoegen1_Click(sender As Object, e As EventArgs) Handles BttnInvoegen1.Click
-    sInvoegen(Action.Invoegen1)
+  Private Sub hBttnDelete_Click(sender As System.Object, e As System.EventArgs) Handles BttnDelete.Click
+    Dim lPosition As Integer
+    Dim lLength As Integer
+    Dim lAction As Action
+
+    lPosition = CInt(TxtStart.Text)
+    lLength = CInt(TxtLength.Text)
+    lAction = New Action(Action.Delete, lPosition, lLength, "")
+    sNewAction(lAction)
+    TxtSelected.Text = sRename(mInput)
   End Sub
 
-  Private Sub sInvoegen(pAktieCode As Integer)
-    Dim lPositie As Integer
-    Dim lAktie As Action
-
-    lPositie = CInt(TxtStart.Text)
-    lAktie = New Action(pAktieCode, lPositie, TxtInvoegen.Text.Length, TxtInvoegen.Text)
-    sNieuweAktie(lAktie)
-    TxtSelected.Text = sHernoem(mInput)
-  End Sub
-
-  Private Sub hBttnVerwijder_Click(sender As System.Object, e As System.EventArgs) Handles BttnVerwijder.Click
-    Dim lPositie As Integer
-    Dim lLengte As Integer
-    Dim lAktie As Action
-
-    lPositie = CInt(TxtStart.Text)
-    lLengte = CInt(TxtLengte.Text)
-    lAktie = New Action(Action.Verwijderen, lPositie, lLengte, "")
-    sNieuweAktie(lAktie)
-    TxtSelected.Text = sHernoem(mInput)
-  End Sub
-
-  Private Sub BttnVerhoog_Click(sender As Object, e As EventArgs) Handles BttnVerhoog.Click
-    Dim lPositie As Integer
-    Dim lLengte As Integer
-    Dim lAktie As Action
-
-    lPositie = CInt(TxtStart.Text)
-    lLengte = CInt(TxtLengte.Text)
-    lAktie = New Action(Action.Verhoog, lPositie, lLengte, "")
-    sNieuweAktie(lAktie)
-    TxtSelected.Text = sHernoem(mInput)
-  End Sub
-
-  Private Sub BttnVerlaag_Click(sender As Object, e As EventArgs) Handles BttnVerlaag.Click
-    Dim lPositie As Integer
-    Dim lLengte As Integer
-    Dim lAktie As Action
-
-    lPositie = CInt(TxtStart.Text)
-    lLengte = CInt(TxtLengte.Text)
-    lAktie = New Action(Action.Verlaag, lPositie, lLengte, "")
-    sNieuweAktie(lAktie)
-    TxtSelected.Text = sHernoem(mInput)
-  End Sub
-
-  Private Function sNieuweAktie(pAktie As Action) As Integer
-    mMaxAktie = mMaxAktie + 1
-    ReDim Preserve mAkties(mMaxAktie)
-    mAkties(mMaxAktie) = pAktie
+  Private Function sNewAction(pAction As Action) As Integer
+    mMaxAction = mMaxAction + 1
+    ReDim Preserve mActions(mMaxAction)
+    mActions(mMaxAction) = pAction
     sInitGrid()
-    sNieuweAktie = cOK
+    sNewAction = cOK
   End Function
 
-  Private Sub sZetSelectie()
+  Private Sub sSetSelection()
     TxtStart.Text = CStr(TxtSelected.SelectionStart)
-    TxtLengte.Text = CStr(TxtSelected.SelectionLength)
+    TxtLength.Text = CStr(TxtSelected.SelectionLength)
   End Sub
 
   Private Sub hTxtSelected_Leave(sender As System.Object, e As System.EventArgs) Handles TxtSelected.Leave
-    sZetSelectie()
+    sSetSelection()
   End Sub
 
   Private Sub hTxtSelected_MouseUp(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles TxtSelected.MouseUp
-    sZetSelectie()
+    sSetSelection()
   End Sub
 
   Private Sub hTxtSelected_KeyUp(sender As System.Object, e As System.Windows.Forms.KeyEventArgs) Handles TxtSelected.KeyUp
-    sZetSelectie()
+    sSetSelection()
   End Sub
 
   Private Sub sInitGrid()
-    DgvAkties.RowCount = mMaxAktie + 1
-    DgvAkties.Refresh()
+    DgvActions.RowCount = mMaxAction + 1
+    DgvActions.Refresh()
   End Sub
 
-  Private Sub hDgvAkties_CellValueNeeded(sender As Object, e As DataGridViewCellValueEventArgs) Handles DgvAkties.CellValueNeeded
-    Dim lRij As Integer
+  Private Sub hDgvActions_CellValueNeeded(sender As Object, e As DataGridViewCellValueEventArgs) Handles DgvActions.CellValueNeeded
+    Dim lRow As Integer
 
-    lRij = e.RowIndex
+    lRow = e.RowIndex
     Select Case e.ColumnIndex
       Case 0
-        e.Value = mAkties(lRij).xAktieTekst
+        e.Value = mResManager.GetString(mActions(lRow).xAktieTekst)
       Case 1
-        e.Value = mAkties(lRij).xStart
+        e.Value = mActions(lRow).xStart
       Case 2
-        e.Value = mAkties(lRij).xLengte
+        e.Value = mActions(lRow).xLength
       Case 3
-        e.Value = mAkties(lRij).xWaarde
+        e.Value = mActions(lRow).xValue
     End Select
   End Sub
 
-  Private Function sHernoem(pNaamIn As String) As String
-    Dim lNaamIn As String
-    Dim lNaamUit As String
+  Private Function sRename(pNameIn As String) As String
+    Dim lNameIn As String
+    Dim lNameOut As String
 
-    lNaamIn = pNaamIn
-    lNaamUit = lNaamIn
-    For Each lAktie In mAkties
-      lNaamUit = lAktie.xPasToe(lNaamIn)
-      lNaamIn = lNaamUit
+    lNameIn = pNameIn
+    lNameOut = lNameIn
+    For Each lAction In mActions
+      lNameOut = lAction.xApply(lNameIn)
+      lNameIn = lNameOut
     Next
 
-    sHernoem = lNaamUit
+    sRename = lNameOut
   End Function
 
-  Private Sub BttnToepassen_Click(sender As Object, e As EventArgs) Handles BttnToepassen.Click
-    Dim lBestanden As String()
-    Dim lLengte As Integer
-    Dim lTeller As Integer
+  Private Sub BttnApply_Click(sender As Object, e As EventArgs) Handles BttnApply.Click
+    Dim lFiles As String()
+    Dim lLength As Integer
+    Dim lCount As Integer
     Dim lItem As ListViewItem
 
-    If RdoAlles.Checked Then
-      lLengte = LstDir.Items.Count - 1
-      ReDim lBestanden(lLengte)
-      lTeller = 0
+    If RdoAll.Checked Then
+      lLength = LstDir.Items.Count - 1
+      ReDim lFiles(lLength)
+      lCount = 0
       For Each lItem In LstDir.Items
-        lBestanden(lTeller) = lItem.Text
-        lTeller = lTeller + 1
+        lFiles(lCount) = lItem.Text
+        lCount = lCount + 1
       Next
     Else
-      lLengte = LstDir.SelectedItems.Count - 1
-      ReDim lBestanden(lLengte)
-      lTeller = 0
+      lLength = LstDir.SelectedItems.Count - 1
+      ReDim lFiles(lLength)
+      lCount = 0
       For Each lItem In LstDir.SelectedItems
-        lBestanden(lTeller) = lItem.Text
-        lTeller = lTeller + 1
+        lFiles(lCount) = lItem.Text
+        lCount = lCount + 1
       Next
     End If
 
-    For Each lBestand In lBestanden
-      sHerNoemBestand(lBestand)
+    For Each lFile In lFiles
+      sRenameFile(lFile)
     Next
 
     sListFiles()
   End Sub
 
-  Private Sub sHerNoemBestand(pNaam As String)
-    Dim lNaamUit As String
-    Dim lBestandIn As String
-    Dim lBestandUit As String
-    Dim lBestand As FileInfo
+  Private Sub sRenameFile(pName As String)
+    Dim lNameOut As String
+    Dim lFileIn As String
+    Dim lFileOut As String
+    Dim lFile As FileInfo
 
-    lNaamUit = sHernoem(pNaam)
-    lBestandIn = mPad & pNaam
-    lBestandUit = mPad & lNaamUit
-    lBestand = New FileInfo(lBestandIn)
-    lBestand.MoveTo(lBestandUit)
+    lNameOut = sRename(pName)
+    lFileIn = mPath & pName
+    lFileOut = mPath & lNameOut
+    lFile = New FileInfo(lFileIn)
+    lFile.MoveTo(lFileOut)
   End Sub
 
-  Private Sub DgvAkties_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles DgvAkties.RowsRemoved
+  Private Sub DgvActions_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles DgvActions.RowsRemoved
     Dim lIndex As Integer
+    Dim lCount As Integer
 
     If e.RowCount > 0 Then
       lIndex = e.RowIndex
-      For lTeller = e.RowIndex To mAkties.Length - 2
-        mAkties(lTeller) = mAkties(lTeller + 1)
+      For lCount = e.RowIndex To mActions.Length - 2
+        mActions(lCount) = mActions(lCount + 1)
       Next
-      mMaxAktie = mMaxAktie - 1
-      ReDim Preserve mAkties(mMaxAktie)
-      TxtSelected.Text = sHernoem(mInput)
+      mMaxAction = mMaxAction - 1
+      ReDim Preserve mActions(mMaxAction)
+      TxtSelected.Text = sRename(mInput)
     End If
   End Sub
 
@@ -342,10 +315,10 @@ Public Class FrmMain
   End Sub
 
   Private Sub BtnInit_Click(sender As Object, e As EventArgs) Handles BtnInit.Click
-    DgvAkties.RowCount = 0
-    mMaxAktie = -1
-    ReDim mAkties(mMaxAktie)
+    DgvActions.RowCount = 0
+    mMaxAction = -1
+    ReDim mActions(mMaxAction)
     sInitGrid()
-    TxtSelected.Text = sHernoem(mInput)
+    TxtSelected.Text = sRename(mInput)
   End Sub
 End Class
