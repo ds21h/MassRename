@@ -4,6 +4,10 @@ Imports System.Resources
 
 Public Class FrmMain
   Private mResManager As ResourceManager
+  Private mTestWatcher As FileSystemWatcher
+
+  Delegate Sub dReWorkDir(pPath As String)
+  Private delReWorkDir As dReWorkDir
 
   Private Const cOK As Integer = 0
   Private Const cError As Integer = 10
@@ -18,12 +22,176 @@ Public Class FrmMain
   Public Sub New()
     InitializeComponent()
     mResManager = New ResourceManager("MassRename.MassRenameStrings", GetType(FrmMain).Assembly)
+    mTestWatcher = New FileSystemWatcher("D:\")
+    mTestWatcher.IncludeSubdirectories = True
+    mTestWatcher.NotifyFilter = NotifyFilters.DirectoryName
+    AddHandler mTestWatcher.Changed, AddressOf hOnChanged
+    AddHandler mTestWatcher.Created, AddressOf hOnChanged
+    AddHandler mTestWatcher.Deleted, AddressOf hOnChanged
+    AddHandler mTestWatcher.Renamed, AddressOf hOnRenamed
+    mTestWatcher.EnableRaisingEvents = True
+    delReWorkDir = New dReWorkDir(AddressOf hReworkDir)
     sMakeDrives()
+  End Sub
+
+  Private Sub hOnChanged(source As Object, e As FileSystemEventArgs)
+    Dim lParent As String
+
+    'This listener runs on another thread, so it cannot access the controls in the UI thread
+    'Use the invoke function to accomplish that
+    lParent = sGetParentPath(e.FullPath)
+    Me.Invoke(delReWorkDir, lParent)
+  End Sub
+
+  Private Sub hOnRenamed(source As Object, e As RenamedEventArgs)
+    Dim lParentOld As String
+    Dim lParentNew As String
+
+    'This listener runs on another thread, so it cannot access the controls in the UI thread
+    'Use the invoke function to accomplish that
+    lParentOld = sGetParentPath(e.OldFullPath)
+    lParentNew = sGetParentPath(e.FullPath)
+    Me.Invoke(delReWorkDir, lParentOld)
+    If lParentOld <> lParentNew Then
+      Me.Invoke(delReWorkDir, lParentNew)
+    End If
+  End Sub
+
+  Private Function sGetParentPath(pPath As String) As String
+    Dim lCount As Integer
+    Dim lEnd As Integer
+    Dim lResult As String
+
+    lEnd = 0
+    For lCount = pPath.Length To 1 Step -1
+      If Mid(pPath, lCount, 1) = "\" Then
+        lEnd = lCount
+        Exit For
+      End If
+    Next
+    If lEnd > 0 Then
+      lResult = Mid(pPath, 1, lEnd - 1)
+    Else
+      lResult = ""
+    End If
+    Return lResult
+  End Function
+
+  Private Sub hReworkDir(pPath As String)
+    sReWorkNode(TreeDir.Nodes, pPath)
+  End Sub
+
+  Private Sub sReWorkNode(pNodes As TreeNodeCollection, pUri As String)
+    Dim lNode As TreeNode
+    Dim lTag As String
+    Dim lFound As Boolean
+    Dim lCount As Integer
+    Dim lTarget As String
+    Dim lUriRest As String
+
+    lTarget = pUri
+    lUriRest = ""
+    For lCount = 1 To pUri.Length
+      If Mid(pUri, lCount, 1) = "\" Then
+        lFound = True
+        lTarget = Mid(pUri, 1, lCount - 1)
+        lUriRest = Mid(pUri, lCount + 1)
+        Exit For
+      End If
+    Next
+    lFound = False
+    For lCount = 0 To pNodes.Count - 1
+      lNode = pNodes.Item(lCount)
+      lTag = DirectCast(lNode.Tag, String)
+      If lTag = lTarget Then
+        lFound = True
+        Exit For
+      End If
+    Next
+
+    If lFound Then
+      If lNode.IsExpanded Then
+        If lUriRest = "" Then
+          sProcessNode(lNode)
+        Else
+          sReWorkNode(lNode.Nodes, lUriRest)
+        End If
+      End If
+    End If
+  End Sub
+
+  Private Sub sProcessNode(pNode As TreeNode)
+    Dim lPath As String
+    Dim lSubDirs() As String
+    Dim lCountDir As Integer
+    Dim lCountNode As Integer
+    Dim lValueDir As String
+    Dim lValueNode As String
+    Dim lValueSmall As String
+    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim lStatus As Integer
+    Dim lDirNode As TreeNode
+
+    lPath = sDeterminePath(pNode)
+    lSubDirs = sGetSubDirs(lPath)
+    If lSubDirs.Length > 0 Then
+      lValueDir = lSubDirs(0)
+    Else
+      lValueDir = cValueEnd
+    End If
+    If pNode.Nodes.Count > 0 Then
+      lValueNode = DirectCast(pNode.Nodes(0).Tag, String)
+    Else
+      lValueNode = cValueEnd
+    End If
+    lCountDir = 0
+    lCountNode = 0
+    Do While (True)
+      If lValueDir < lValueNode Then
+        lValueSmall = lValueDir
+      Else
+        lValueSmall = lValueNode
+      End If
+      If lValueSmall = cValueEnd Then
+        Exit Do
+      End If
+      lStatus = 0
+      If lValueDir = lValueSmall Then
+        lStatus = 1
+        lCountDir = lCountDir + 1
+        If lCountDir < lSubDirs.Length Then
+          lValueDir = lSubDirs(lCountDir)
+        Else
+          lValueDir = cValueEnd
+        End If
+      End If
+      If lValueNode = lValueSmall Then
+        If lStatus <> 1 Then
+          pNode.Nodes.RemoveAt(lCountNode)
+          lCountNode = lCountNode - 1
+        End If
+        lStatus = 2
+        lCountNode = lCountNode + 1
+        If lCountNode < pNode.Nodes.Count Then
+          lValueNode = DirectCast(pNode.Nodes(lCountNode).Tag, String)
+        Else
+          lValueNode = cValueEnd
+        End If
+      End If
+      If lStatus = 1 Then
+        lDirNode = New TreeNode
+        lDirNode.Text = lValueSmall
+        lDirNode.Tag = lValueSmall
+        pNode.Nodes.Insert(lCountNode, lDirNode)
+        lCountNode = lCountNode + 1
+      End If
+    Loop
   End Sub
 
   Private Sub sMakeDrives()
     Dim lStations() As DriveInfo
     Dim lDriveName As String
+    Dim lDriveTag As String
     Dim lDriveCount As Integer
     Dim lDriveNode As TreeNode
 
@@ -36,33 +204,57 @@ Public Class FrmMain
       If Mid(lDriveName, Len(lDriveName), 1) = "\" Then
         lDriveName = Mid(lDriveName, 1, Len(lDriveName) - 1)
       End If
+      lDriveTag = lDriveName
       If lStation.IsReady Then
         lDriveName = "(" & lStation.VolumeLabel & ") " & lDriveName
       End If
 
       lDriveNode = New TreeNode
       lDriveNode.Text = lDriveName
+      lDriveNode.Tag = lDriveTag
       TreeDir.Nodes.Add(lDriveNode)
       If lStation.IsReady Then
-        TreeDir.Nodes(lDriveCount).Nodes.Add("x")
+        If Not sEmptyNode(lDriveNode) Then
+          TreeDir.Nodes(lDriveCount).Nodes.Add("x")
+        End If
       End If
       lDriveCount = lDriveCount + 1
     Next lStation
     TreeDir.EndUpdate()
   End Sub
 
+  Private Function sEmptyNode(pNode As TreeNode) As Boolean
+    Dim lPath As String
+    Dim lSubDirs() As String
+    Dim lResult As Boolean
+
+    lPath = sDeterminePath(pNode)
+    lSubDirs = sGetSubDirs(lPath)
+    If lSubDirs.Length > 0 Then
+      lResult = False
+    Else
+      lResult = True
+    End If
+
+    Return lResult
+  End Function
+
   Private Sub sFillNode(ByVal pPath As String, ByVal pStartNode As TreeNode)
     Dim lSubDirs() As String
     Dim lDirCount As Integer
+    Dim lDirNode As TreeNode
 
     lSubDirs = sGetSubDirs(pPath)
-    lDirCount = 0
     TreeDir.BeginUpdate()
     pStartNode.Nodes.Clear()
-    For Each lSubDir In lSubDirs
-      pStartNode.Nodes.Add(lSubDir)
-      pStartNode.Nodes(lDirCount).Nodes.Add("x")
-      lDirCount = lDirCount + 1
+    For lDirCount = 0 To lSubDirs.Length - 1
+      lDirNode = New TreeNode
+      lDirNode.Text = lSubDirs(lDirCount)
+      lDirNode.Tag = lSubDirs(lDirCount)
+      pStartNode.Nodes.Add(lDirNode)
+      If Not sEmptyNode(lDirNode) Then
+        lDirNode.Nodes.Add("x")
+      End If
     Next
     TreeDir.EndUpdate()
   End Sub

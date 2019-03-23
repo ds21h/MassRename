@@ -4,6 +4,10 @@ A Windows desktop application for renaming multiple files in the same way
 
 History:
 
+Version 0.3 - 23-03-2019
+-	Treeview expansion (+) now only appears if sub-directories exist
+-	Treeview reacts to changes made outside this program. ONLY ON DRIVE D:
+
 Version 0.2 - 17-03-2019
 -	User interface multi lingual (English and Dutch) based on Windows version
 -	Some very specific functions deleted
