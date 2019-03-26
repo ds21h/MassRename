@@ -1,10 +1,11 @@
 Imports System.IO
 Imports System.Windows.Forms
 Imports System.Resources
+Imports System.Collections.ObjectModel
 
 Public Class FrmMain
   Private mResManager As ResourceManager
-  Private mTestWatcher As FileSystemWatcher
+  Private mFileWatchers As New Collection(Of FileSystemWatcher)
 
   Delegate Sub dReWorkDir(pPath As String)
   Private delReWorkDir As dReWorkDir
@@ -22,16 +23,17 @@ Public Class FrmMain
   Public Sub New()
     InitializeComponent()
     mResManager = New ResourceManager("MassRename.MassRenameStrings", GetType(FrmMain).Assembly)
-    mTestWatcher = New FileSystemWatcher("D:\")
-    mTestWatcher.IncludeSubdirectories = True
-    mTestWatcher.NotifyFilter = NotifyFilters.DirectoryName
-    AddHandler mTestWatcher.Changed, AddressOf hOnChanged
-    AddHandler mTestWatcher.Created, AddressOf hOnChanged
-    AddHandler mTestWatcher.Deleted, AddressOf hOnChanged
-    AddHandler mTestWatcher.Renamed, AddressOf hOnRenamed
-    mTestWatcher.EnableRaisingEvents = True
+    'mTestWatcher = New FileSystemWatcher("D:\")
+    'mTestWatcher.IncludeSubdirectories = True
+    'mTestWatcher.NotifyFilter = NotifyFilters.DirectoryName
+    'AddHandler mTestWatcher.Changed, AddressOf hOnChanged
+    'AddHandler mTestWatcher.Created, AddressOf hOnChanged
+    'AddHandler mTestWatcher.Deleted, AddressOf hOnChanged
+    'AddHandler mTestWatcher.Renamed, AddressOf hOnRenamed
+    'mTestWatcher.EnableRaisingEvents = True
     delReWorkDir = New dReWorkDir(AddressOf hReworkDir)
-    sMakeDrives()
+    sReworkDrives()
+    'sMakeDrives()
   End Sub
 
   Private Sub hOnChanged(source As Object, e As FileSystemEventArgs)
@@ -116,6 +118,23 @@ Public Class FrmMain
         Else
           sReWorkNode(lNode.Nodes, lUriRest)
         End If
+      Else
+        sSetNodeExpand(lNode)
+      End If
+    End If
+  End Sub
+
+  Private Sub sSetNodeExpand(pNode As TreeNode)
+    Dim lPath As String
+    Dim lSubDirs() As String
+
+    lPath = sDeterminePath(pNode)
+    lSubDirs = sGetSubDirs(lPath)
+    If lSubDirs.Length = 0 Then
+      pNode.Nodes.Clear()
+    Else
+      If pNode.Nodes.Count = 0 Then
+        pNode.Nodes.Add("x")
       End If
     End If
   End Sub
@@ -166,7 +185,7 @@ Public Class FrmMain
         End If
       End If
       If lValueNode = lValueSmall Then
-        If lStatus <> 1 Then
+        If lStatus = 0 Then
           pNode.Nodes.RemoveAt(lCountNode)
           lCountNode = lCountNode - 1
         End If
@@ -190,38 +209,144 @@ Public Class FrmMain
 
   Private Sub sMakeDrives()
     Dim lStations() As DriveInfo
+    Dim lStation As DriveInfo
     Dim lDriveName As String
     Dim lDriveTag As String
-    Dim lDriveCount As Integer
     Dim lDriveNode As TreeNode
+    Dim lWatcher As FileSystemWatcher
 
     TreeDir.BeginUpdate()
     TreeDir.Nodes.Clear()
-    lDriveCount = 0
     lStations = DriveInfo.GetDrives
     For Each lStation In lStations
-      lDriveName = lStation.Name
-      If Mid(lDriveName, Len(lDriveName), 1) = "\" Then
-        lDriveName = Mid(lDriveName, 1, Len(lDriveName) - 1)
+      lDriveTag = lStation.Name
+      If Mid(lDriveTag, Len(lDriveTag), 1) = "\" Then
+        lDriveTag = Mid(lDriveTag, 1, Len(lDriveTag) - 1)
       End If
-      lDriveTag = lDriveName
       If lStation.IsReady Then
-        lDriveName = "(" & lStation.VolumeLabel & ") " & lDriveName
-      End If
-
-      lDriveNode = New TreeNode
-      lDriveNode.Text = lDriveName
-      lDriveNode.Tag = lDriveTag
-      TreeDir.Nodes.Add(lDriveNode)
-      If lStation.IsReady Then
+        lDriveName = "(" & lStation.VolumeLabel & ") " & lDriveTag
+        lDriveNode = New TreeNode
+        lDriveNode.Text = lDriveName
+        lDriveNode.Tag = lDriveTag
+        TreeDir.Nodes.Add(lDriveNode)
         If Not sEmptyNode(lDriveNode) Then
-          TreeDir.Nodes(lDriveCount).Nodes.Add("x")
+          lDriveNode.Nodes.Add("x")
         End If
+        lWatcher = sSetupWatcher(lStation.Name)
+        mFileWatchers.Add(lWatcher)
       End If
-      lDriveCount = lDriveCount + 1
     Next lStation
     TreeDir.EndUpdate()
   End Sub
+
+  Private Sub sReworkDrives()
+    Dim lStations() As DriveInfo
+    Dim lCountDrive As Integer
+    Dim lCountNode As Integer
+    Dim lValueDrive As String
+    Dim lValueNode As String
+    Dim lValueSmall As String
+    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim lStatus As Integer
+    Dim lDriveName As String = ""
+    Dim lDriveNode As TreeNode
+    Dim lWatcher As FileSystemWatcher
+
+    TmrRefresh.Enabled = False
+
+    lStations = DriveInfo.GetDrives
+    If lStations.Length > 0 Then
+      lValueDrive = sStripDrive(lStations(0))
+    Else
+      lValueDrive = cValueEnd
+    End If
+    If TreeDir.Nodes.Count > 0 Then
+      lValueNode = DirectCast(TreeDir.Nodes(0).Tag, String)
+    Else
+      lValueNode = cValueEnd
+    End If
+    lCountDrive = 0
+    lCountNode = 0
+    Do While (True)
+      If lValueDrive < lValueNode Then
+        lValueSmall = lValueDrive
+      Else
+        lValueSmall = lValueNode
+      End If
+      If lValueSmall = cValueEnd Then
+        Exit Do
+      End If
+      lStatus = 0
+      If lValueDrive = lValueSmall Then
+        If lStations(lCountDrive).IsReady Then
+          lDriveName = lStations(lCountDrive).VolumeLabel
+          lStatus = 1
+        End If
+        lCountDrive = lCountDrive + 1
+        If lCountDrive < lStations.Length Then
+          lValueDrive = sStripDrive(lStations(lCountDrive))
+        Else
+          lValueDrive = cValueEnd
+        End If
+      End If
+      If lValueNode = lValueSmall Then
+        If lStatus = 0 Then
+          TreeDir.Nodes.RemoveAt(lCountNode)
+          mFileWatchers(lCountNode).EnableRaisingEvents = False
+          mFileWatchers(lCountNode).Dispose()
+          mFileWatchers.RemoveAt(lCountNode)
+          lCountNode = lCountNode - 1
+        End If
+        lStatus = 2
+        lCountNode = lCountNode + 1
+        If lCountNode < TreeDir.Nodes.Count Then
+          lValueNode = DirectCast(TreeDir.Nodes(lCountNode).Tag, String)
+        Else
+          lValueNode = cValueEnd
+        End If
+      End If
+      If lStatus = 1 Then
+        lDriveNode = New TreeNode
+        lDriveNode.Text = "(" & lDriveName & ") " & lValueSmall
+        lDriveNode.Tag = lValueSmall
+        TreeDir.Nodes.Insert(lCountNode, lDriveNode)
+        If Not sEmptyNode(lDriveNode) Then
+          lDriveNode.Nodes.Add("x")
+        End If
+        lWatcher = sSetupWatcher(lValueSmall & "\")
+        mFileWatchers.Insert(lCountNode, lWatcher)
+        lCountNode = lCountNode + 1
+      End If
+    Loop
+
+    TmrRefresh.Enabled = True
+  End Sub
+
+  Private Function sStripDrive(pStation As DriveInfo) As String
+    Dim lDriveTag As String
+
+    lDriveTag = pStation.Name
+    If Mid(lDriveTag, Len(lDriveTag), 1) = "\" Then
+      lDriveTag = Mid(lDriveTag, 1, Len(lDriveTag) - 1)
+    End If
+
+    Return lDriveTag
+  End Function
+
+  Private Function sSetupWatcher(pPath As String) As FileSystemWatcher
+    Dim lWatcher As FileSystemWatcher
+
+    lWatcher = New FileSystemWatcher(pPath)
+    lWatcher.IncludeSubdirectories = True
+    lWatcher.NotifyFilter = NotifyFilters.DirectoryName
+    AddHandler lWatcher.Changed, AddressOf hOnChanged
+    AddHandler lWatcher.Created, AddressOf hOnChanged
+    AddHandler lWatcher.Deleted, AddressOf hOnChanged
+    AddHandler lWatcher.Renamed, AddressOf hOnRenamed
+    lWatcher.EnableRaisingEvents = True
+
+    Return lWatcher
+  End Function
 
   Private Function sEmptyNode(pNode As TreeNode) As Boolean
     Dim lPath As String
@@ -512,5 +637,9 @@ Public Class FrmMain
     ReDim mActions(mMaxAction)
     sInitGrid()
     TxtSelected.Text = sRename(mInput)
+  End Sub
+
+  Private Sub TmrRefresh_Tick(sender As Object, e As EventArgs) Handles TmrRefresh.Tick
+    sReworkDrives()
   End Sub
 End Class

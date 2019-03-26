@@ -19,6 +19,7 @@ Partial Class FrmMain
   'Do not modify it using the code editor.
   <System.Diagnostics.DebuggerStepThrough()>
   Private Sub InitializeComponent()
+    Me.components = New System.ComponentModel.Container()
     Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmMain))
     Me.SplInhoud = New System.Windows.Forms.SplitContainer()
     Me.TreeDir = New System.Windows.Forms.TreeView()
@@ -42,6 +43,7 @@ Partial Class FrmMain
     Me.RdoSel = New System.Windows.Forms.RadioButton()
     Me.RdoAll = New System.Windows.Forms.RadioButton()
     Me.BtnInit = New System.Windows.Forms.Button()
+    Me.TmrRefresh = New System.Windows.Forms.Timer(Me.components)
     CType(Me.SplInhoud, System.ComponentModel.ISupportInitialize).BeginInit()
     Me.SplInhoud.Panel1.SuspendLayout()
     Me.SplInhoud.Panel2.SuspendLayout()
@@ -57,12 +59,10 @@ Partial Class FrmMain
     '
     'SplInhoud.Panel1
     '
-    resources.ApplyResources(Me.SplInhoud.Panel1, "SplInhoud.Panel1")
     Me.SplInhoud.Panel1.Controls.Add(Me.TreeDir)
     '
     'SplInhoud.Panel2
     '
-    resources.ApplyResources(Me.SplInhoud.Panel2, "SplInhoud.Panel2")
     Me.SplInhoud.Panel2.Controls.Add(Me.LstDir)
     '
     'TreeDir
@@ -72,8 +72,8 @@ Partial Class FrmMain
     '
     'LstDir
     '
-    resources.ApplyResources(Me.LstDir, "LstDir")
     Me.LstDir.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
+    resources.ApplyResources(Me.LstDir, "LstDir")
     Me.LstDir.FullRowSelect = True
     Me.LstDir.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
     Me.LstDir.HideSelection = False
@@ -129,10 +129,10 @@ Partial Class FrmMain
     '
     'DgvActions
     '
-    resources.ApplyResources(Me.DgvActions, "DgvActions")
     Me.DgvActions.AllowUserToAddRows = False
     Me.DgvActions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
     Me.DgvActions.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ClmAktie, Me.ClmStart, Me.ClmLengte, Me.ClmWaarde})
+    resources.ApplyResources(Me.DgvActions, "DgvActions")
     Me.DgvActions.MultiSelect = False
     Me.DgvActions.Name = "DgvActions"
     Me.DgvActions.ReadOnly = True
@@ -170,10 +170,10 @@ Partial Class FrmMain
     '
     'GrpToepassen
     '
-    resources.ApplyResources(Me.GrpToepassen, "GrpToepassen")
     Me.GrpToepassen.Controls.Add(Me.RdoSel)
     Me.GrpToepassen.Controls.Add(Me.RdoAll)
     Me.GrpToepassen.Controls.Add(Me.BttnApply)
+    resources.ApplyResources(Me.GrpToepassen, "GrpToepassen")
     Me.GrpToepassen.Name = "GrpToepassen"
     Me.GrpToepassen.TabStop = False
     '
@@ -196,6 +196,10 @@ Partial Class FrmMain
     resources.ApplyResources(Me.BtnInit, "BtnInit")
     Me.BtnInit.Name = "BtnInit"
     Me.BtnInit.UseVisualStyleBackColor = True
+    '
+    'TmrRefresh
+    '
+    Me.TmrRefresh.Interval = 2000
     '
     'FrmMain
     '
@@ -250,4 +254,5 @@ Partial Class FrmMain
   Friend WithEvents ClmStart As Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents ClmLengte As Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents ClmWaarde As Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents TmrRefresh As Windows.Forms.Timer
 End Class
