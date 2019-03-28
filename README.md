@@ -4,9 +4,10 @@ A Windows desktop application for renaming multiple files in the same way
 
 History:
 
-Version 0.4
+Version 1.0 - 28-03-2019
 -	Treeview reacts to changes made outside this program on all drives
 -	Treeview reacts to connect/disconnect removable drive
+-	ListView with filenames reacts to changes made outsid this program
 
 Version 0.3 - 23-03-2019
 -	Treeview expansion (+) now only appears if sub-directories exist

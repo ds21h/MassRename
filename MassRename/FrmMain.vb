@@ -6,9 +6,12 @@ Imports System.Collections.ObjectModel
 Public Class FrmMain
   Private mResManager As ResourceManager
   Private mFileWatchers As New Collection(Of FileSystemWatcher)
+  Private mDirWatcher As FileSystemWatcher
 
-  Delegate Sub dReWorkDir(pPath As String)
-  Private delReWorkDir As dReWorkDir
+  Delegate Sub delReWorkDir(pPath As String)
+  Delegate Sub delReWorkList()
+  Private dReWorkDir As delReWorkDir
+  Private dReWorkList As delReWorkList
 
   Private Const cOK As Integer = 0
   Private Const cError As Integer = 10
@@ -23,17 +26,20 @@ Public Class FrmMain
   Public Sub New()
     InitializeComponent()
     mResManager = New ResourceManager("MassRename.MassRenameStrings", GetType(FrmMain).Assembly)
-    'mTestWatcher = New FileSystemWatcher("D:\")
-    'mTestWatcher.IncludeSubdirectories = True
-    'mTestWatcher.NotifyFilter = NotifyFilters.DirectoryName
-    'AddHandler mTestWatcher.Changed, AddressOf hOnChanged
-    'AddHandler mTestWatcher.Created, AddressOf hOnChanged
-    'AddHandler mTestWatcher.Deleted, AddressOf hOnChanged
-    'AddHandler mTestWatcher.Renamed, AddressOf hOnRenamed
-    'mTestWatcher.EnableRaisingEvents = True
-    delReWorkDir = New dReWorkDir(AddressOf hReworkDir)
+    dReWorkDir = New delReWorkDir(AddressOf hReworkDir)
+    dReWorkList = New delReWorkList(AddressOf hReworkList)
     sReworkDrives()
-    'sMakeDrives()
+    sSetupDirWatcher()
+  End Sub
+
+  Private Sub sSetupDirWatcher()
+    mDirWatcher = New FileSystemWatcher()
+    mDirWatcher.IncludeSubdirectories = False
+    mDirWatcher.NotifyFilter = NotifyFilters.FileName
+    AddHandler mDirWatcher.Created, AddressOf hOnFileChanged
+    AddHandler mDirWatcher.Deleted, AddressOf hOnFileChanged
+    AddHandler mDirWatcher.Renamed, AddressOf hOnFileRenamed
+    mDirWatcher.EnableRaisingEvents = False
   End Sub
 
   Private Sub hOnChanged(source As Object, e As FileSystemEventArgs)
@@ -42,7 +48,7 @@ Public Class FrmMain
     'This listener runs on another thread, so it cannot access the controls in the UI thread
     'Use the invoke function to accomplish that
     lParent = sGetParentPath(e.FullPath)
-    Me.Invoke(delReWorkDir, lParent)
+    Me.Invoke(dReWorkDir, lParent)
   End Sub
 
   Private Sub hOnRenamed(source As Object, e As RenamedEventArgs)
@@ -53,10 +59,22 @@ Public Class FrmMain
     'Use the invoke function to accomplish that
     lParentOld = sGetParentPath(e.OldFullPath)
     lParentNew = sGetParentPath(e.FullPath)
-    Me.Invoke(delReWorkDir, lParentOld)
+    Me.Invoke(dReWorkDir, lParentOld)
     If lParentOld <> lParentNew Then
-      Me.Invoke(delReWorkDir, lParentNew)
+      Me.Invoke(dReWorkDir, lParentNew)
     End If
+  End Sub
+
+  Private Sub hOnFileChanged(source As Object, e As FileSystemEventArgs)
+    'This listener runs on another thread, so it cannot access the controls in the UI thread
+    'Use the invoke function to accomplish that
+    Me.Invoke(dReWorkList)
+  End Sub
+
+  Private Sub hOnFileRenamed(source As Object, e As RenamedEventArgs)
+    'This listener runs on another thread, so it cannot access the controls in the UI thread
+    'Use the invoke function to accomplish that
+    Me.Invoke(dReWorkList)
   End Sub
 
   Private Function sGetParentPath(pPath As String) As String
@@ -84,7 +102,7 @@ Public Class FrmMain
   End Sub
 
   Private Sub sReWorkNode(pNodes As TreeNodeCollection, pUri As String)
-    Dim lNode As TreeNode
+    Dim lNode As TreeNode = Nothing
     Dim lTag As String
     Dim lFound As Boolean
     Dim lCount As Integer
@@ -115,6 +133,7 @@ Public Class FrmMain
       If lNode.IsExpanded Then
         If lUriRest = "" Then
           sProcessNode(lNode)
+          sFillFileList()
         Else
           sReWorkNode(lNode.Nodes, lUriRest)
         End If
@@ -205,38 +224,6 @@ Public Class FrmMain
         lCountNode = lCountNode + 1
       End If
     Loop
-  End Sub
-
-  Private Sub sMakeDrives()
-    Dim lStations() As DriveInfo
-    Dim lStation As DriveInfo
-    Dim lDriveName As String
-    Dim lDriveTag As String
-    Dim lDriveNode As TreeNode
-    Dim lWatcher As FileSystemWatcher
-
-    TreeDir.BeginUpdate()
-    TreeDir.Nodes.Clear()
-    lStations = DriveInfo.GetDrives
-    For Each lStation In lStations
-      lDriveTag = lStation.Name
-      If Mid(lDriveTag, Len(lDriveTag), 1) = "\" Then
-        lDriveTag = Mid(lDriveTag, 1, Len(lDriveTag) - 1)
-      End If
-      If lStation.IsReady Then
-        lDriveName = "(" & lStation.VolumeLabel & ") " & lDriveTag
-        lDriveNode = New TreeNode
-        lDriveNode.Text = lDriveName
-        lDriveNode.Tag = lDriveTag
-        TreeDir.Nodes.Add(lDriveNode)
-        If Not sEmptyNode(lDriveNode) Then
-          lDriveNode.Nodes.Add("x")
-        End If
-        lWatcher = sSetupWatcher(lStation.Name)
-        mFileWatchers.Add(lWatcher)
-      End If
-    Next lStation
-    TreeDir.EndUpdate()
   End Sub
 
   Private Sub sReworkDrives()
@@ -339,7 +326,6 @@ Public Class FrmMain
     lWatcher = New FileSystemWatcher(pPath)
     lWatcher.IncludeSubdirectories = True
     lWatcher.NotifyFilter = NotifyFilters.DirectoryName
-    AddHandler lWatcher.Changed, AddressOf hOnChanged
     AddHandler lWatcher.Created, AddressOf hOnChanged
     AddHandler lWatcher.Deleted, AddressOf hOnChanged
     AddHandler lWatcher.Renamed, AddressOf hOnRenamed
@@ -442,29 +428,92 @@ Public Class FrmMain
 
     lSelNode = e.Node
     mPath = sDeterminePath(lSelNode)
-    sListFiles()
+    sFillFileList()
+    mDirWatcher.Path = mPath
+    mDirWatcher.EnableRaisingEvents = True
   End Sub
 
-  Private Sub sListFiles()
-    Dim lMainDir As DirectoryInfo
-    Dim lFiles() As FileInfo
-    Dim lLine As ListViewItem
+  Private Sub hReworkList()
+    sFillFileList()
+  End Sub
 
-    lMainDir = New DirectoryInfo(mPath)
-    LstDir.BeginUpdate()
-    LstDir.Items.Clear()
-    Try
-      lFiles = lMainDir.GetFiles
-      For Each lFile In lFiles
-        lLine = New ListViewItem
-        lLine.Text = lFile.Name
-        LstDir.Items.Add(lLine)
-      Next
-    Catch ex As Exception
-    End Try
-    LstDir.EndUpdate()
-    mInput = ""
-    TxtSelected.Text = ""
+  Private Sub sFillFileList()
+    Dim lMainDir As DirectoryInfo
+
+    If mPath <> "" Then
+      lMainDir = New DirectoryInfo(mPath)
+      If lMainDir.Exists Then
+        sReWorkFileList(lMainDir)
+      Else
+        LstDir.Items.Clear()
+        mInput = ""
+        TxtSelected.Text = ""
+        sSetSelection()
+      End If
+    End If
+  End Sub
+
+  Private Sub sReWorkFileList(pDir As DirectoryInfo)
+    Dim lFiles() As FileInfo
+    Dim lCountFile As Integer
+    Dim lCountItem As Integer
+    Dim lValueFile As String
+    Dim lValueItem As String
+    Dim lValueSmall As String
+    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim lStatus As Integer
+
+    lFiles = pDir.GetFiles
+    If lFiles.Length > 0 Then
+      lValueFile = lFiles(0).Name
+    Else
+      lValueFile = cValueEnd
+    End If
+    If LstDir.Items.Count > 0 Then
+      lValueItem = LstDir.Items(0).Text
+    Else
+      lValueItem = cValueEnd
+    End If
+    lCountFile = 0
+    lCountItem = 0
+    Do While (True)
+      If lValueFile < lValueItem Then
+        lValueSmall = lValueFile
+      Else
+        lValueSmall = lValueItem
+      End If
+      If lValueSmall = cValueEnd Then
+        Exit Do
+      End If
+      lStatus = 0
+      If lValueFile = lValueSmall Then
+        lStatus = 1
+        lCountFile = lCountFile + 1
+        If lCountFile < lFiles.Length Then
+          lValueFile = lFiles(lCountFile).Name
+        Else
+          lValueFile = cValueEnd
+        End If
+      End If
+      If lValueItem = lValueSmall Then
+        If lStatus = 0 Then
+          LstDir.Items.RemoveAt(lCountItem)
+          lCountItem = lCountItem - 1
+        End If
+        lStatus = 2
+        lCountItem = lCountItem + 1
+        If lCountItem < LstDir.Items.Count Then
+          lValueItem = LstDir.Items(lCountItem).Text
+        Else
+          lValueItem = cValueEnd
+        End If
+      End If
+      If lStatus = 1 Then
+        LstDir.Items.Insert(lCountItem, lValueSmall)
+        lCountItem = lCountItem + 1
+      End If
+    Loop
+
   End Sub
 
   Private Sub hLstDir_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles LstDir.SelectedIndexChanged
@@ -473,10 +522,11 @@ Public Class FrmMain
     If LstDir.SelectedItems.Count > 0 Then
       lRegel = LstDir.SelectedItems(0)
       mInput = lRegel.Text
+      TxtSelected.Text = sRename(mInput)
     Else
       mInput = ""
+      TxtSelected.Text = ""
     End If
-    TxtSelected.Text = sRename(mInput)
     sSetSelection()
   End Sub
 
@@ -559,7 +609,7 @@ Public Class FrmMain
       lNameIn = lNameOut
     Next
 
-    sRename = lNameOut
+    Return lNameOut
   End Function
 
   Private Sub BttnApply_Click(sender As Object, e As EventArgs) Handles BttnApply.Click
@@ -568,6 +618,7 @@ Public Class FrmMain
     Dim lCount As Integer
     Dim lItem As ListViewItem
 
+    mDirWatcher.EnableRaisingEvents = False
     If RdoAll.Checked Then
       lLength = LstDir.Items.Count - 1
       ReDim lFiles(lLength)
@@ -590,7 +641,9 @@ Public Class FrmMain
       sRenameFile(lFile)
     Next
 
-    sListFiles()
+    LstDir.Items.Clear()
+    sFillFileList()
+    mDirWatcher.EnableRaisingEvents = True
   End Sub
 
   Private Sub sRenameFile(pName As String)
