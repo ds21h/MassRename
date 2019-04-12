@@ -4,6 +4,9 @@ A Windows desktop application for renaming multiple files in the same way
 
 History:
 
+Version 1.0.1 - 12-04-2019
+-	Fixed bug in comparison with lower case characters
+
 Version 1.0 - 28-03-2019
 -	Treeview reacts to changes made outside this program on all drives
 -	Treeview reacts to connect/disconnect removable drive

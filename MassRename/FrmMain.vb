@@ -166,7 +166,7 @@ Public Class FrmMain
     Dim lValueDir As String
     Dim lValueNode As String
     Dim lValueSmall As String
-    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim cValueEnd As String = Chr(255)
     Dim lStatus As Integer
     Dim lDirNode As TreeNode
 
@@ -233,7 +233,7 @@ Public Class FrmMain
     Dim lValueDrive As String
     Dim lValueNode As String
     Dim lValueSmall As String
-    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim cValueEnd As String = Chr(255)
     Dim lStatus As Integer
     Dim lDriveName As String = ""
     Dim lDriveNode As TreeNode
@@ -460,7 +460,7 @@ Public Class FrmMain
     Dim lValueFile As String
     Dim lValueItem As String
     Dim lValueSmall As String
-    Dim cValueEnd As String = "ZZZZZZZZZZZZZZZZZ"
+    Dim cValueEnd As String = Chr(255)
     Dim lStatus As Integer
 
     lFiles = pDir.GetFiles
